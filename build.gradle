@@ -1,0 +1,85 @@
+plugins {
+    id "java"
+    id "application"
+    id "com.google.protobuf" version "0.8.18"
+//    id "idea"
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://maven-central.storage-download.googleapis.com/maven2/" }
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+
+//apply plugin : "java"
+
+application {
+    mainClass.set("de.tum.i13.Main")
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.17.3" //3.19.1 has a bug
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.42.1'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
+
+jar {
+    
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+    manifest {
+        attributes "Main-Class": "de.tum.i13.Main"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.guava:guava:31.0.1-jre'
+
+    implementation 'io.prometheus:simpleclient:0.12.0'
+    implementation 'io.prometheus:simpleclient_hotspot:0.12.0'
+    implementation 'io.prometheus:simpleclient_httpserver:0.12.0'
+
+    implementation 'org.postgresql:postgresql:42.3.1'
+
+    implementation 'org.tinylog:tinylog-api:2.4.1'
+    implementation 'org.tinylog:tinylog-impl:2.4.1'
+
+    implementation 'io.grpc:grpc-netty-shaded:1.43.0'
+    implementation 'io.grpc:grpc-protobuf:1.43.0'
+    implementation 'io.grpc:grpc-stub:1.43.0'
+
+    implementation 'org.hdrhistogram:HdrHistogram:2.1.12'
+    implementation 'me.tongfei:progressbar:0.9.2'
+
+    implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '1.2'
+
+    //compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // grpc needs that, necessary for Java 9+
+    implementation group: 'junit', name: 'junit', version: '4.13.2'
+}

@@ -1,0 +1,14 @@
+
+-- batches per day
+
+select DATE_TRUNC('day', "timestamp") as "day", count(*) from querymetrics as q
+join benchmarks b on q.benchmark_id = b.id
+group by "day"
+order by "day"
+
+
+-- benchmarks per day
+select DATE_TRUNC('day', "timestamp") as "day", count("id")
+from benchmarks
+group by "day"
+order by day
