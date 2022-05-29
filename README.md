@@ -44,7 +44,7 @@ cd web
 ./startwebserver
 ```
 
-## How to create groups and get API token
+## How to create users and get API token
 
 + Run the [admin](web/frontend/admin.py) file as:
 ```shell
