@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="alert alert-danger">
+        Deactivation of benchmarks? This can be useful for Evaluation runs. You had a successful and fast run, but you screwed up the last run which would count. If this is the case, then you can deactivate the last run and the previous counts in the dashboard.
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+        <a class="btn btn-primary" href="/querymetrics/{{ benchmark.id }}/">Download Metrics CSV</a>
+
+        {% if benchmark.is_active %}
+        <form action="{{ url_for('deactivatebenchmark') }}" method="post" class="form">
+            <input type="hidden" name="benchmarkid" class="form-control" value="{{ benchmark.id }}">
+            <input type="submit" name="deactivate" class="btn btn-danger" value="Deactivate" />
+        </form>
+        {%  endif %}
+    </div>
+    </td>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Property</th>
+                <th scope="col">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Timestamp</td>
+                    <td class="humantimestamp" title="{{ benchmark.timestamp }}"></td>
+                </tr>
+                <tr>
+                    <td>Type</td>
+                    <td>{{ benchmark.benchmark_type }}</td>
+                </tr>
+                <tr>
+                    <td>Active</td>
+                    <td>{{ benchmark.is_active }}</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td align="right">{{ benchmark.benchmark_name }}</td>
+                </tr>
+                <tr>
+                    <td>Batchsize</td>
+                    <td align="right">{{ benchmark.batchsize }}</td>
+                </tr>
+                {% if not benchmarkresults %}
+                    <tr>
+                        <td>No results</td>
+                        <td>Not finished? Not called endBenchmark(Benchmark)?</td>
+                    </tr>
+                {% endif %}
+
+                {% if benchmarkresults %}
+                    <tr>
+                        <td>Duration</td>
+                        <td align="right">{{ benchmarkresults.duration_sec }}</td>
+                    </tr>
+                    <tr>
+                        <td>Query 1, received results</td>
+                        <td align="right">{{ benchmarkresults.q1_count }}</td>
+                    </tr>
+                    <tr>
+                        <td>Query1, throughput (batches/second)</td>
+                        <td align="right">{{ benchmarkresults.q1_throughput }}</td>
+                    </tr>
+                    <tr>
+                        <td>Query 1, 90 percentile</td>
+                        <td align="right">{{ benchmarkresults.q1_90percentile }} ms</td>
+                    </tr>
+                    <tr>
+                        <td>Query 2, received results</td>
+                        <td align="right">{{ benchmarkresults.q2_count }}</td>
+                    </tr>
+                    <tr>
+                        <td>Query 2, throughput</td>
+                        <td align="right">{{ benchmarkresults.q2_throughput }}</td>
+                    </tr>
+                    <tr>
+                        <td>Query 2, 90 percentile</td>
+                        <td align="right">{{ benchmarkresults.q2_90percentile }} ms</td>
+                    </tr>
+                    <tr>
+                        <td>Details (Nanoseconds)</td>
+                        <td><textarea rows="8" style="min-width: 100%;resize:none">{{ benchmarkresults.summary }}</textarea></td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

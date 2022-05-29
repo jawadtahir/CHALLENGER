@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="alert alert-secondary">
+        Criteria: both q1 and q2 have results, last active run, benchmark type="Evaluation, benchmark run after 2022-03-17 19:40:04 UTC (switch to batchsize of 10k)"
+    </div>
+    <h4>Latency Ranking - (Sorted by lowest latency ((q1 + q2) /2)</h4>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Team</th>
+                    <th>Latency</th>
+                    <th>Throughput</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for a in latencies %}
+            <tr>
+                <td>{{ a["rank"] }}</td>
+                <td>{{ a["groupname"] }}</td>
+                <td>{{ a["avg90percentile"] }}</td>
+                <td>{{ a["avgthroughput"] }}</td>
+            </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    <h4>Runtime/Throughput Ranking (Sorted by highest throughput (q1 + q2) / 2)</h4>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Team</th>
+                <th>Latency</th>
+                <th>Throughput</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for a in throughput %}
+                <tr>
+                    <td>{{ a["rank"] }}</td>
+                    <td>{{ a["groupname"] }}</td>
+                    <td>{{ a["avg90percentile"] }}</td>
+                    <td>{{ a["avgthroughput"] }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

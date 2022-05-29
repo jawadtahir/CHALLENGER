@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <p>For comparison you can download the output of Q1 below.</p>
+
+    <p>There can be many valid reasons why your results may differ slightly. Reasons such as:</p>
+    <p>
+    <ul class="">
+        <li>Rounding or different number types in different programming languages</li>
+        <li>Slightly different windowing semantics provided by the event processing framework</li>
+        <li>When data is partitioned, (e.g., to leverage multithreading) and the watermark is determined different within a partition</li>
+        <li>Edge cases in geolocation lookup, e.g., handling of cases where a point is exactly on line or if the earth curvature is taken into account. Also here some frameworks provide extensions which are slightly different.</li>
+    </ul>
+    </p>
+    <p>We acknowledge that your results may be slightly off. Since the ranking is based on 5 days average those difference should nevertheless not make that huge difference in the end.</p>
+    <p>The configuration for the test is a follows: benchmark_type="test", batch_size=10k.</p>
+    <p>The AQI values are integers, first rounded to 3 digits, then multiplied by 1000. Hence the actual AQI is the value/1000.</p>
+    <pre>
+        <code>
+benchmarkconfiguration = ch.BenchmarkConfiguration(token="checkyourprofile",
+                                                   batch_size=10_000,
+                                                   benchmark_name="shows_up_in_dashboard",
+                                                   benchmark_type="test",
+                                                   queries=[ch.BenchmarkConfiguration.Query.Q1, ch.BenchmarkConfiguration.Query.Q2])
+benchmark = stub.createNewBenchmark(benchmarkconfiguration)
+        </code>
+    </pre>
+    <p>The snapshots are taken every batch, 10000, 20000 ... 160000</p>
+    <p>Download <a href="/static/q1exampleresults.zip">q1exampleresults.zip</a></p>
+
+{% endblock %}
+

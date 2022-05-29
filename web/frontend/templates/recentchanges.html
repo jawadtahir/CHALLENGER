@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 table-responsive">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Time ago</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for change in changes %}
+        <tr {% if change.level == 1 %} class="alert alert-danger" {% endif %} {% if change.level == 2 %} class="alert alert-success" {% endif %} role="alert">
+            <td class="humantimestamp" title="{{ change.timestamp }}">
+            </td>
+            <td>
+                {{ change.description }}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

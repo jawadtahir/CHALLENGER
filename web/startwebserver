@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+echo "Copy the current proto"
+cp ../challenger/src/main/proto/challenger.proto frontend/static/challenger.proto
+
+echo "Copy example file"
+cp ../query/example.py frontend/static/example.py
+
+echo "Start frontend"
+hypercorn frontend.webserver:app

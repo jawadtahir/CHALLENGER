@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<span>Below are the files listed which contain the source data used in this challenge. To further analyze the data, you can download them from below:</span>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 table-responsive">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Dataset</th>
+            <th>Size in MB</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for file in files %}
+        <tr>
+            <td><a href="/datasets22/{{ file[0] }}">{{ file[0] }}</a></td>
+            <td>{{ "%.2f"|format(file[1]) }} MB</td>
+        </tr>
+        </tbody>
+        {%  endfor %}
+    </table>
+</div>
+
+{% endblock %}

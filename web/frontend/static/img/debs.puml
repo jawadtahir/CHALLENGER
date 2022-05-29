@@ -1,0 +1,42 @@
+@startuml
+activate Participant
+
+
+group 1) Create a new Benchmark
+Challenger <- Participant: createNewBenchmark(BenchmarkConfiguration)
+activate Challenger
+Challenger --> Participant: (Benchmark)
+deactivate Challenger
+end
+
+group 2) Benchmark
+Challenger <- Participant: startBenchmark(Benchmark)
+activate Challenger
+
+
+group Repeat until finished
+Challenger <- Participant: nextMessage(Benchmark)
+activate Challenger
+Challenger --> Participant: Payload
+
+group Parallelized calculation of results
+Challenger <- Participant: resultQ1(ResultQ1)
+Challenger --> Participant:
+Challenger <- Participant: resultQ2(ResultQ2)
+Challenger --> Participant:
+end
+
+deactivate Challenger
+end
+
+
+
+Challenger <- Participant: endBenchmark(Benchmark)
+Challenger --> Participant:
+
+deactivate Challenger
+deactivate Participant
+end
+
+
+@enduml

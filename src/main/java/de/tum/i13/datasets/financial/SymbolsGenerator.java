@@ -30,9 +30,9 @@ public class SymbolsGenerator implements Enumeration<List<String>>{
 
         ArrayList<String> takenSymbols = new ArrayList<String>();
 
-        int amount_symbols = gen.nextInt(5)+5; //between 5 - 10 symbols
+        int amount_symbols = gen.nextInt(15) + 5; //between 5 - 20 symbols
 
-        var amount_lower = 2; //20% we get from the lower 90%
+        var amount_lower = Math.max(amount_symbols / 10, 1); //10% we get from the lower 90%
         var amount_upper = amount_symbols - amount_lower;
 
         for(int i = 0; i < amount_lower; ++i) {
@@ -40,7 +40,7 @@ public class SymbolsGenerator implements Enumeration<List<String>>{
         }
 
         for(int i = 0; i < amount_upper; ++i) {
-            takenSymbols.add(this.symbols.get(this.gen.nextInt(this.symbols.size())).getSymbol());
+            takenSymbols.add(this.symbols.get(this.gen.nextInt((this.symbols.size() -1))+treshold).getSymbol());
         }
 
         var distinct_symbols = takenSymbols.stream().distinct().collect(Collectors.toList());

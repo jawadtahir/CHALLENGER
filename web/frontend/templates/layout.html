@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Christoph Doblander, Jawad Tahir">
+    <title>DEBS 2022 - Challenge</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="theme-color" content="#563d7c">
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">DEBS 2022 - Benchmarking</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            {% if current_user.is_authenticated %}
+                <a class="nav-link" href="/logout">Sign out</a>
+            {% else %}
+                <a class="nav-link" href="/login">Sign in</a>
+            {% endif %}
+        </li>
+    </ul>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav id="sidebarMenu" class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                {% if menu %}
+                <ul class="nav flex-column">
+                    {% for menu_item in menu %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if (menu_item[3] == True) %} active {% endif %}" href="{{ menu_item[2] }}">
+                            <span data-feather="{{ menu_item[1] }}"></span>
+                            {{ menu_item[0] }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1 class="h2">{{ name }}</h1>
+            </div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+                {% if error %}<p class="alert alert-warning">{{ error }}{% endif %}
+                {% for category, message in get_flashed_messages(with_categories=true) %}
+                    <div class="row">
+                        <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+</div>
+
+{% block script %}
+{% endblock %}
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="/docs/4.5/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/static/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<script src="/static/js/moment.js"></script>
+<script src="/static/js/clipboard.min.js"></script>
+<script>
+    if (typeof jQuery != "undefined") jQuery.fn.prettyDate = function() {
+        return this.each(function() {
+            var date = moment(this.title, "YYYY-MM-DD hh:mm:ss").fromNow(); //2020-10-05 15:37:03.269469
+            if (date) jQuery(this).text(date);
+        });
+    };
+    $(".humantimestamp").prettyDate();
+    $( document ).ready(function() {
+        new ClipboardJS('.btn-clipboard');
+    });
+</script>
+</html>
+
+

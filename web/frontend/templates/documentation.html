@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Api</h2>
+
+    <p>We offer a GRPC based Api. You can generate your client for your preferred language using the generators provided.</p>
+    <p>The public API endpoint can be reached here: <code>challenge.msrg.in.tum.de:5023</code> </p>
+    <p>Internal deployments on VMs should use: <code>192.168.1.4:5023</code> </p>
+    <p>You can download the protos to generate the client here: <a href="/static/challenger.proto">Proto</a></p>
+    <p>See <a href="https://grpc.io/">grpc.io</a> for documentation and tutorials.</p>
+
+    <h2>Usage</h2>
+    <p>The illustration below shows the API interactions. Next we give more details to the steps and examples in Python code.</p>
+    <p>You can download the example code shown below here: <a href="/static/example.py">example.py</a></p>
+    <p>Here we provide a java client stub: <a href="/static/javaexample.zip">javaexample.zip</a></p>
+    <img src="/static/img/debs.png" class="img-fluid" alt="Api usage">
+
+    <h4>Step 0</h4>
+    <p>Generate the client code, as example, we use Python. For other languages check the documentation</p>
+
+    <pre>
+    <code>
+# Install dependencies
+pip install grpcio
+pip install grpcio-tools
+
+# Generate client code
+python -m grpc_tools.protoc -I . --python_out=. --grpc_python_out=. challenger.proto
+    </code>
+    </pre>
+
+    <h4>Step 0</h4>
+    <p>Initilize the client stub from the generated code</p>
+    <pre>
+        <code>
+import challenger_pb2 as ch
+import challenger_pb2_grpc as api
+
+op = [('grpc.max_send_message_length', 10 * 1024 * 1024),
+      ('grpc.max_receive_message_length', 100 * 1024 * 1024)]
+with grpc.insecure_channel('challenge.msrg.in.tum.de:5023', options=op) as channel:
+    stub = api.ChallengerStub(channel)
+        </code>
+    </pre>
+
+    <h4>Step 1</h4>
+    <p>Create a new Benchmark. You have set your token (see profile), set a benchmark name (this is only shown in your statistics) and the batchsize.
+        The benchmark_type should be set to "test" if you experiment.
+        Also add the list of which queries you want to run, either just one, [Q1] or [Q2] or both at the same time [Q1, Q2].
+    </p>
+    <pre>
+        <code>
+benchmarkconfiguration = ch.BenchmarkConfiguration(
+                token="get profile", #The api token is available in the profile, see here: https://challenge.msrg.in.tum.de/profile/
+                benchmark_name="shows_up_in_dashboard", #This name is used here: https://challenge.msrg.in.tum.de/benchmarks/
+                benchmark_type="test", #Test or Evaluation, Evaluation will be available end of January. Test can be used to start implementing
+                queries=[ch.Query.Q1, ch.Query.Q2])
+benchmark = stub.createNewBenchmark(benchmarkconfiguration)
+        </code>
+    </pre>
+
+    <h4>Step 2</h4>
+    <p>First start the Benchmark. This sets the timestamp server side for the throughput measurments. Then process all the batches. The batches are correlated for the latency measurements.</p>
+    <p>Once you called the endBenchmark RPC, we calculate the results. For testing, you can call endBenchmark early, e.g., after 100 batches.</p>
+
+    <pre>
+        <code>
+stub.startBenchmark(benchmark)
+        </code>
+    </pre>
+    <h4>Step 3</h4>
+    <p>Start processing events!</p>
+    <pre>
+        <code>
+while True:
+    batch = stub.nextBatch(benchmark)
+    event_count = event_count + len(batch.events)
+
+    def queryResults(symbols:list[str]) -> list[ch.Indicator]:
+        # Your part: calculate the indicators for the given symbols
+        return list()
+
+    resultQ1 = ch.ResultQ1(
+        benchmark_id=benchmark.id, #The id of the benchmark
+        batch_seq_id=batch.seq_id, #The sequence id of the batch
+        indicators=queryResults(batch.lookup_symbols))
+    stub.resultQ1(resultQ1)  # send the result of query 1 back
+    
+    def crossoverEvents() -> list[ch.CrossoverEvent]:
+        Your part: calculate the crossover events
+        return list()
+
+    # do the same for Q2
+    resultQ2 = ch.ResultQ2(
+        benchmark_id=benchmark.id, #The id of the benchmark
+        batch_seq_id=batch.seq_id, #The sequence id of the batch
+        crossover_events=crossoverEvents()) 
+    
+    stub.resultQ2(resultQ2) # submit the results of Q2
+    
+    # Step 4 - once the last event is received, stop the clock
+    # See the statistics within ~5min here: https://challenge.msrg.in.tum.de/benchmarks/
+    if batch.last:
+        print(f"received last batch, total batches: {event_count}")
+        stub.endBenchmark(benchmark)
+        break
+        </code>
+    </pre>
+
+    <p>Still have questions/Errors/Problems? => debsgc22@gmail.com</p>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h6>How to ask questions?</h6>
+    <p>Please send e-mail: debsgc22@gmail.com</p>
+    <p></p>
+
+    <h6>What should be the granularity of timestamps?</h6>
+    <p>Timestamps till milliseconds should be considered.</p>
+    <p></p>
+
+    <h6>Can we get batches in parallel or should we submit the result of a batch before getting the next batch?</h6>
+    <p>You can get more batches by invoking nextBatch method. You don't have to submit the result to get the next batch. </p>
+    <p></p>
+
+    <h6>Is the batch size fixed to 1000?</h6>
+    <p>No, we will use bigger batches for the final evaluation.</p>
+    <p>2022-03-17: Change of batchsize for evaluation runs to 10k.</9>
+    <p></p>
+
+    <h6>Are subscriptions going to change in the evaluation?</h6>
+    <p>Yes.</p>
+    <p></p>
+
+    <h6>How to reply if we didn't receive any data for a subscription?</h6>
+    <p>An empty set is enough.</p>
+    <p></p>
+
+    <h6>Will we get an indication of which results are correct?</h6>
+    <p>So far there are no plans to return an indication of correctness via the API. We keep you posted on this.</p>
+    <p></p>
+
+    <h6>Should all the windows be aligned or should each window be started with the first event?</h6>
+    <p>All the windows should be aligned.</p>
+    <p></p>
+
+    <h6>Are the event timestamps monotonically increasing?</h6>
+    <p>Dataset is ordered by the arrival of events but as the dataset is coming 
+        from multiple sources, the monotonicity of dataset cannot be claimed.
+    </p>
+    <p></p>
+
+    <h6>What should be the EMA_0?</h6>
+    <p>EMA of each symbol can be started from 0.
+    </p>
+    <p></p>
+
+    <h6>What are the internal IPs for the VMs?</h6>
+    <p>VMs are connected over a virtual network. If you are developing a distributed solution you can "connect" multiple VMs using internal IPs.</p>
+    <p></p>
+
+
+{% endblock %}

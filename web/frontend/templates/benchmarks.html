@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="alert alert-secondary">
+        Bugfix 2022-03-30 20:46:00 UTC: Showing the correct batchsize for benchmarks after that.
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>Details</th>
+                <th>Timestamp</th>
+                <th>Type</th>
+                <th>Name</th>
+                <th align="right">Batchsize</th>
+                <th align="right">Is active</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for benchmark in benchmarks %}
+                <tr>
+                    <td><a class="btn btn-primary" href="/benchmarkdetails/{{ benchmark.id }}/">Show details</a>
+                    </td>
+                    <td class="humantimestamp" title="{{ benchmark.timestamp }}"></td>
+                    <td>{{ benchmark.benchmark_type }}</td>
+                    <td>{{ benchmark.benchmark_name }}</td>
+                    <td align="right">{{ benchmark.batchsize }}</td>
+                    <td align="right">{{ benchmark.is_active }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

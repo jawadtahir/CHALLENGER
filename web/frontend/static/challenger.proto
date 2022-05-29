@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "de.tum.i13.bandency";
+
+package Challenger;
+
+enum SecurityType {
+  Equity = 0;
+  Index = 1;
+}
+
+message Event {
+  string symbol = 1;
+  SecurityType security_type = 2;
+  float last_trade_price = 3;
+  google.protobuf.Timestamp last_trade = 4;
+}
+
+message Batch {
+  int64 seq_id = 1;
+  bool last = 2;
+  repeated string lookup_symbols = 3;
+  repeated Event events = 4;
+}
+
+message Benchmark {
+  int64 id = 1;
+}
+
+message Indicator {
+  string symbol = 1;
+  float ema_38 = 2;
+  float ema_100 = 3;
+}
+
+message ResultQ1 {
+  int64 benchmark_id = 1;
+  int64 batch_seq_id = 2;
+
+  repeated Indicator indicators = 3;
+}
+
+message CrossoverEvent {
+  enum SignalType {
+    Buy = 0;
+    Sell = 1;
+  }
+
+  google.protobuf.Timestamp ts = 1;
+  string symbol = 2;
+  SecurityType security_type = 3;
+  SignalType signal_type = 4;
+}
+
+message ResultQ2 {
+  int64 benchmark_id = 1;
+  int64 batch_seq_id = 2;
+  
+  repeated CrossoverEvent crossover_events = 3;
+}
+
+enum Query {
+  Q1 = 0;
+  Q2 = 1;
+}
+
+message BenchmarkConfiguration {
+  string token = 1; //Token from the webapp for authentication
+  string benchmark_name = 2; //chosen by the team, listed in the results
+  string benchmark_type = 3; //benchmark type, e.g., test
+  repeated Query queries = 4;
+}
+
+service Challenger {
+
+  //Create a new Benchmark based on the configuration
+  rpc createNewBenchmark(BenchmarkConfiguration) returns (Benchmark);
+
+  //This marks the starting point of the throughput measurements
+  rpc startBenchmark(Benchmark) returns (google.protobuf.Empty);
+
+  //get the next Batch
+  rpc nextBatch(Benchmark) returns (Batch);
+
+  //post the result
+  rpc resultQ1(ResultQ1) returns (google.protobuf.Empty);
+  rpc resultQ2(ResultQ2) returns (google.protobuf.Empty);
+  
+  //This marks the end of the throughput measurements
+  rpc endBenchmark(Benchmark) returns (google.protobuf.Empty);
+}
