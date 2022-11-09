@@ -48,7 +48,7 @@ cd web
 
 + Run the [admin](web/frontend/admin.py) file as:
 ```shell
-python frontend/admin.py --email someemail@mail.com --skipmail true --makevm false
+python3 frontend/admin.py newgroup --email someemail@mail.com --skipmail true --makevm false
 ```
 
 

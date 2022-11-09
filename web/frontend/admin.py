@@ -10,10 +10,10 @@ import uuid
 
 import smtplib
 from email.mime.text import MIMEText
-from aio_pika import connect, Message
-from aio_pika.robust_connection import connect_robust
+# from aio_pika import connect, Message
+# from aio_pika.robust_connection import connect_robust
 
-from frontend.models import db, Group, ChallengeGroup
+from models import db, Group, ChallengeGroup
 
 salt = 'qakLgEdljdsljertVyFHfR4vwQw'
 
